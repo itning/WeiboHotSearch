@@ -1,0 +1,10 @@
+server:
+  port: 8080 #端口
+debug: false #调试模式
+spring:
+  thymeleaf:
+    cache: false #缓存
+    mode: HTML
+logging:
+  level: debug
+  level.top: debug
