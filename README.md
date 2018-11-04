@@ -11,6 +11,7 @@
 [![GitHub repo size in bytes](https://img.shields.io/github/repo-size/itning/WeiboHotSearch.svg)]()
 [![language](https://img.shields.io/badge/language-JAVA-orange.svg)]()
 
-[](https://github.com/itning/WeiboHotSearch/blob/master/pic/pic1.png)
-##开源协议
+## 预览
+![](https://github.com/itning/WeiboHotSearch/blob/master/pic/pic1.png)
+## 开源协议
 - [MIT](https://github.com/itning/hrms/blob/dev/LICENSE)
