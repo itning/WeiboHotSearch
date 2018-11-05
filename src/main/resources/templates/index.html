@@ -72,7 +72,10 @@
         function start() {
             let option = {
                 tooltip: {
-                    show: true
+                    show: true,
+                    formatter: function (item) {
+                        return item[0] + '热度：' + item[1] + '<br>';
+                    }
                 },
                 list: list,
                 color: '#15a4fa',
