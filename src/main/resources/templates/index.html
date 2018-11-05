@@ -41,6 +41,7 @@
                     list.push(arr);
                 });
                 start();
+                clickEvent();
             });
         }
 
@@ -74,7 +75,7 @@
                 tooltip: {
                     show: true,
                     formatter: function (item) {
-                        return item[0] + '热度：' + item[1] + '<br>';
+                        return item[0] + '->热度：' + item[1] + '<br>';
                     }
                 },
                 list: list,
@@ -84,6 +85,20 @@
             };
             let wc = new Js2WordCloud(document.getElementById('container'));
             wc.setOption(option)
+        }
+
+        function clickEvent() {
+            let $canvas = $("canvas");
+            $canvas.unbind();
+            $canvas.click(function () {
+                let $WcTooltip = $(".__wc_tooltip__");
+                if ($WcTooltip.is(":visible")) {
+                    let key = $WcTooltip.text().split("->");
+                    if (key[0] !== "") {
+                        window.open("https://s.weibo.com/weibo?q=" + key[0] + "&Refer=top")
+                    }
+                }
+            });
         }
     });
 </script>
