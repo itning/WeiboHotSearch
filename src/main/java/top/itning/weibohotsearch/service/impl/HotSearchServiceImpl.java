@@ -53,14 +53,19 @@ public class HotSearchServiceImpl implements HotSearchService {
     }
 
     @Scheduled(fixedRate = 30000)
-    public void dieHotSetTaskScheduled() throws IOException {
+    public void dieHotSetTaskScheduled() {
         logger.info("start task date：{} thread {}", new Date(), Thread.currentThread().toString());
-        List<Entry> entryList = get();
-        HashSet<Entry> entries = new HashSet<>(entryList);
-        lastSet.removeAll(entries);
-        dieHotSet.addAll(lastSet);
-        lastSet.clear();
-        lastSet.addAll(entries);
+        try {
+            List<Entry> entryList = get();
+            HashSet<Entry> entries = new HashSet<>(entryList);
+            lastSet.removeAll(entries);
+            dieHotSet.addAll(lastSet);
+            lastSet.clear();
+            lastSet.addAll(entries);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+        }
         logger.info("end task date：{} thread {}", new Date(), Thread.currentThread().toString());
         logger.debug("die host size: {}", dieHotSet.size());
     }
