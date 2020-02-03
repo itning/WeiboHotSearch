@@ -10,8 +10,9 @@ import top.itning.weibohotsearch.entity.Entry;
 import top.itning.weibohotsearch.service.HotSearchService;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author wangn
@@ -34,7 +35,17 @@ public class HotSearchController {
             return hotSearchService.get();
         } catch (IOException e) {
             logger.error("error: ", e);
-            return new ArrayList<>();
+            return Collections.emptyList();
+        }
+    }
+
+    @GetMapping("/getDie")
+    public Set<Entry> getDie() {
+        try {
+            return hotSearchService.getDie();
+        } catch (Exception e) {
+            logger.error("error: ", e);
+            return Collections.emptySet();
         }
     }
 }

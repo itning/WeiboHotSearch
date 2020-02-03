@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>微博实时撤搜词云-云舒</title>
+</head>
+<body>
+<div>微博实时撤搜 <span id="time"></span></div>
+<label for="flush">刷新频率：</label><select id="flush">
+    <option value="1000">1s</option>
+    <option value="2000">2s</option>
+    <option value="3000" selected>3s</option>
+    <option value="5000">5s</option>
+    <option value="10000">10s</option>
+</select>
+<div id="container" style="height: 700px"></div>
+<script th:src="@{/jquery.min.js}"></script>
+<script th:src="@{/js2wordcloud.min.js}"></script>
+<script>
+    'use strict';
+    $(function () {
+        let list = [];
+        get();
+        let interval = setInterval(get, 3000);
+
+        $("#flush").change(function () {
+            clearInterval(interval);
+            interval = setInterval(get, parseInt($(this).val()));
+        });
+
+        function get() {
+            date();
+            list = [];
+            $.get("/getDie", function (data) {
+                $.each(data, function (i, n) {
+                    let arr = [];
+                    arr[0] = n.value;
+                    arr[1] = n.hot;
+                    list.push(arr);
+                });
+                start();
+                clickEvent();
+            });
+        }
+
+        function date() {
+            let date = new Date();
+            let day = date.getDate();
+            let s = date.getSeconds();
+            let m = date.getMinutes();
+            let h = date.getHours();
+            let mm = (date.getMonth() + 1);
+            if (day < 10) {
+                day = "0" + day;
+            }
+            if (s < 10) {
+                s = "0" + s;
+            }
+            if (m < 10) {
+                m = "0" + m;
+            }
+            if (h < 10) {
+                h = "0" + h;
+            }
+            if (mm < 10) {
+                mm = "0" + mm;
+            }
+            $("#time").text(date.getFullYear() + "-" + mm + "-" + day + " " + h + ":" + m + ":" + s);
+        }
+
+        function start() {
+            let option = {
+                tooltip: {
+                    show: true,
+                    formatter: function (item) {
+                        return item[0] + '->热度：' + item[1] + '<br>';
+                    }
+                },
+                list: list,
+                color: '#15a4fa',
+                shape: 'circle',
+                ellipticity: 1
+            };
+            let wc = new Js2WordCloud(document.getElementById('container'));
+            wc.setOption(option)
+        }
+
+        function clickEvent() {
+            let $canvas = $("canvas");
+            $canvas.unbind();
+            $canvas.click(function () {
+                let $WcTooltip = $(".__wc_tooltip__");
+                if ($WcTooltip.is(":visible")) {
+                    let key = $WcTooltip.text().split("->");
+                    if (key[0] !== "") {
+                        window.open("https://s.weibo.com/weibo?q=" + key[0] + "&Refer=top")
+                    }
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

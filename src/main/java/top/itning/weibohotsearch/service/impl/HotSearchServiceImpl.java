@@ -5,13 +5,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import top.itning.weibohotsearch.entity.Entry;
 import top.itning.weibohotsearch.service.HotSearchService;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author wangn
@@ -19,6 +19,8 @@ import java.util.List;
 @Service
 public class HotSearchServiceImpl implements HotSearchService {
     private static final Logger logger = LoggerFactory.getLogger(HotSearchServiceImpl.class);
+    private static volatile Set<Entry> lastSet = new HashSet<>();
+    private static volatile Set<Entry> dieHotSet = new HashSet<>();
 
     @Override
     public List<Entry> get() throws IOException {
@@ -43,5 +45,23 @@ public class HotSearchServiceImpl implements HotSearchService {
                 });
         logger.debug("list size :" + list.size());
         return list;
+    }
+
+    @Override
+    public Set<Entry> getDie() {
+        return dieHotSet;
+    }
+
+    @Scheduled(fixedRate = 30000)
+    public void dieHotSetTaskScheduled() throws IOException {
+        logger.info("start task date：{} thread {}", new Date(), Thread.currentThread().toString());
+        List<Entry> entryList = get();
+        HashSet<Entry> entries = new HashSet<>(entryList);
+        lastSet.removeAll(entries);
+        dieHotSet.addAll(lastSet);
+        lastSet.clear();
+        lastSet.addAll(entries);
+        logger.info("end task date：{} thread {}", new Date(), Thread.currentThread().toString());
+        logger.debug("die host size: {}", dieHotSet.size());
     }
 }

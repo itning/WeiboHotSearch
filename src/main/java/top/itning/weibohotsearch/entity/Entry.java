@@ -39,4 +39,17 @@ public class Entry implements Serializable, Comparable<Entry> {
     public int compareTo(Entry o) {
         return Integer.compare(this.hot, o.getHot());
     }
+
+    @Override
+    public int hashCode() {
+        return this.value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Entry) {
+            return this.value.equals(((Entry) obj).value);
+        }
+        return super.equals(obj);
+    }
 }

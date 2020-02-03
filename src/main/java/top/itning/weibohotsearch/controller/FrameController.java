@@ -12,4 +12,9 @@ public class FrameController {
     public String index() {
         return "index";
     }
+
+    @GetMapping("/dieHost")
+    public String dieHost() {
+        return "die";
+    }
 }
