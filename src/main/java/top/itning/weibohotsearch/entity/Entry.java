@@ -1,5 +1,9 @@
 package top.itning.weibohotsearch.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.io.Serializable;
 
 /**
@@ -7,8 +11,11 @@ import java.io.Serializable;
  *
  * @author wangn
  */
+@Document(collection = "WeiBoHot")
 public class Entry implements Serializable, Comparable<Entry> {
+    @Field("hot")
     private int hot;
+    @Id
     private String value;
 
     public int getHot() {

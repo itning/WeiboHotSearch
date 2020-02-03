@@ -5,6 +5,10 @@ spring:
   thymeleaf:
     cache: false #缓存
     mode: HTML
+  data:
+    mongodb:
+      database: weibohotsearch
+      uri: mongodb://localhost/weibohotsearch
 logging:
   level: debug
   level.top: debug
