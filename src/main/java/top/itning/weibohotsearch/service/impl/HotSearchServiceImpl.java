@@ -21,8 +21,10 @@ import java.util.*;
 @Service
 public class HotSearchServiceImpl implements HotSearchService {
     private static final Logger logger = LoggerFactory.getLogger(HotSearchServiceImpl.class);
-    private static volatile Set<Entry> lastSet = new HashSet<>();
-    private static volatile Set<Entry> dieHotSet = new HashSet<>();
+    /**
+     * 存储上一次的热搜数据
+     */
+    private static final Set<Entry> LAST_SET = new HashSet<>((int) (50 / .75f) + 1);
 
     private final DieHotRepository dieHotRepository;
 
@@ -57,8 +59,8 @@ public class HotSearchServiceImpl implements HotSearchService {
     }
 
     @Override
-    public Set<Entry> getDie() {
-        return dieHotSet;
+    public List<Entry> getDie() {
+        return dieHotRepository.findAll();
     }
 
     @Scheduled(fixedRate = 30000)
@@ -67,18 +69,17 @@ public class HotSearchServiceImpl implements HotSearchService {
         try {
             List<Entry> entryList = get();
             HashSet<Entry> entries = new HashSet<>(entryList);
-            lastSet.removeAll(entries);
+            // 取补集（set中剩下的元素即撤下的热搜）
+            LAST_SET.removeAll(entries);
 
-            dieHotSet.addAll(lastSet);
-            dieHotRepository.saveAll(dieHotSet).blockLast();
+            dieHotRepository.saveAll(LAST_SET);
 
-            lastSet.clear();
-            lastSet.addAll(entries);
+            LAST_SET.clear();
+            LAST_SET.addAll(entries);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
         }
         logger.info("end task date：{} thread {}", new Date(), Thread.currentThread().toString());
-        logger.debug("die host size: {}", dieHotSet.size());
     }
 }

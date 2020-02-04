@@ -12,7 +12,6 @@ import top.itning.weibohotsearch.service.HotSearchService;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author wangn
@@ -40,12 +39,12 @@ public class HotSearchController {
     }
 
     @GetMapping("/getDie")
-    public Set<Entry> getDie() {
+    public List<Entry> getDie() {
         try {
             return hotSearchService.getDie();
         } catch (Exception e) {
             logger.error("error: ", e);
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
     }
 }

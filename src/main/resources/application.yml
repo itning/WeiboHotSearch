@@ -1,5 +1,7 @@
 server:
   port: 8080 #端口
+  undertow:
+    direct-buffers: true
 debug: false #调试模式
 spring:
   thymeleaf:

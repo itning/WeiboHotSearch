@@ -14,5 +14,5 @@ import java.util.Set;
 public interface HotSearchService {
     List<Entry> get() throws IOException;
 
-    Set<Entry> getDie();
+    List<Entry> getDie();
 }
